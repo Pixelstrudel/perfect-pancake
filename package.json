@@ -1,0 +1,22 @@
+{
+  "name": "perfect-pancake",
+  "version": "1.0.0",
+  "description": "A self-calibrating pancake timer PWA",
+  "private": true,
+  "scripts": {
+    "start": "npx serve public",
+    "deploy": "gh-pages -d public"
+  },
+  "keywords": [
+    "pwa",
+    "pancake",
+    "timer",
+    "cooking"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "gh-pages": "^6.0.0",
+    "serve": "^14.2.1"
+  }
+}

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#FFC857">
+    <meta name="description" content="Self-calibrating pancake timer that learns from your feedback">
+    <title>Perfect Pancake</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icons/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="icons/favicon.svg" />
+    <link rel="shortcut icon" href="icons/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png" />
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>Perfect Pancake</h1>
+            <div id="recipe-selector">
+                <select id="recipe-select" aria-label="Select recipe"></select>
+                <button id="new-recipe-btn" class="icon-btn" title="Create new recipe preset">+</button>
+            </div>
+        </header>
+        <main>
+            <div id="recipe-info">
+                <div id="recipe-header">
+                    <h2 id="recipe-name">Basic Pancakes</h2>
+                    <div id="recipe-actions">
+                        <button id="edit-recipe-btn" class="icon-btn small" title="Edit recipe">✏️</button>
+                        <button id="delete-recipe-btn" class="icon-btn small" title="Delete recipe">🗑️</button>
+                    </div>
+                </div>
+                <p id="recipe-description" class="recipe-description"></p>
+            </div>
+            
+            <div id="temperature-control">
+                <label for="temperature">Stove Temperature: <span id="temp-value">5</span></label>
+                <input type="range" id="temperature" min="1" max="9" value="5">
+                <div class="temp-markers">
+                    <div class="temp-marker"><span class="temp-marker-label">1</span></div>
+                    <div class="temp-marker"><span class="temp-marker-label">2</span></div>
+                    <div class="temp-marker"><span class="temp-marker-label">3</span></div>
+                    <div class="temp-marker"><span class="temp-marker-label">4</span></div>
+                    <div class="temp-marker"><span class="temp-marker-label">5</span></div>
+                    <div class="temp-marker"><span class="temp-marker-label">6</span></div>
+                    <div class="temp-marker"><span class="temp-marker-label">7</span></div>
+                    <div class="temp-marker"><span class="temp-marker-label">8</span></div>
+                    <div class="temp-marker"><span class="temp-marker-label">9</span></div>
+                </div>
+            </div>
+            
+            <div id="pancake-display">
+                <div id="pancake-container">
+                    <div id="pancake" class="raw"></div>
+                    <div id="bubbles-container"></div>
+                </div>
+                <div id="timer">00:00</div>
+                
+                <div id="progress-container">
+                    <div id="progress-bar"></div>
+                    <div id="suggested-time-display">Suggested: <span id="target-time">00:00</span></div>
+                </div>
+            </div>
+            
+            <div id="controls">
+                <button id="action-btn" class="primary-btn">Start Cooking</button>
+            </div>
+            
+            <div id="rating-panel" class="hidden">
+                <h2>How was your pancake?</h2>
+                <div class="rating-buttons">
+                    <button class="rating-btn" data-rating="bad">Bad</button>
+                    <button class="rating-btn" data-rating="mid">Mid</button>
+                    <button class="rating-btn" data-rating="good">Good</button>
+                </div>
+            </div>
+            
+            <div id="recommendation">
+                <div class="recommendation-header">
+                    <p>Perfect pancake at heat level <span id="suggested-temp">5</span>:</p>
+                    <div class="confidence-container" title="Confidence in this recommendation">
+                        <div id="confidence-indicator" class="confidence low"></div>
+                    </div>
+                </div>
+                <p>Cook <span id="suggested-time">--:--</span> (first side / second side)</p>
+                <p id="recommendation-explanation" class="recommendation-explanation">This is a starting suggestion. Rate your pancakes to improve it.</p>
+            </div>
+            
+            <div id="history-panel">
+                <h2>Cooking History</h2>
+                <div id="history-list"></div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Perfect Pancake - A Self-Calibrating Timer</p>
+        </footer>
+    </div>
+    
+    <script src="js/app.js" type="module"></script>
+    <script>
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => console.log('ServiceWorker registered'))
+                    .catch(err => console.log('ServiceWorker registration failed: ', err));
+            });
+        }
+    </script>
+</body>
+</html>
