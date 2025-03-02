@@ -2,7 +2,7 @@
   "name": "Perfect Pancake",
   "short_name": "Pancake",
   "description": "Self-calibrating pancake timer that learns from your feedback",
-  "start_url": "/",
+  "start_url": "/perfect-pancake",
   "display": "standalone",
   "background_color": "#FFFFFF",
   "theme_color": "#FFC857",
