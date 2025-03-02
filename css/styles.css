@@ -1,0 +1,1229 @@
+:root {
+    --primary-color: #FFC857;
+    --secondary-color: #E9724C;
+    --background-color: #FFFAF0; /* Warmer background */
+    --text-color: #2E2E3A;
+    --pancake-raw: #FFF4D6;
+    --pancake-cooking: #FFDA8A;
+    --pancake-medium: #E9A63A;
+    --pancake-cooked: #C26B1D;
+    --pancake-burnt: #694025;
+    --stove-color: #333333;
+    --stove-knob-color: #555555;
+    --progress-bg: #f0f0f0;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    transition: background-color 0.5s ease;
+}
+
+#app {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+    animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+/* Stove Temperature Control */
+#temperature-control {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(to bottom, #444, #222);
+    border-radius: 15px;
+    color: white;
+    position: relative;
+    box-shadow: 0 6px 10px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.1);
+    border: 1px solid #555;
+}
+
+#temperature-control label {
+    display: block;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+#temp-value {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border-radius: 50%;
+    margin-left: 8px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    text-shadow: none;
+    transition: transform 0.3s ease;
+}
+
+#temperature-control:hover #temp-value {
+    transform: scale(1.1);
+}
+
+#temperature {
+    width: 100%;
+    margin-top: 0.5rem;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 20px;
+    border-radius: 10px;
+    background: linear-gradient(to right, #222, #222);
+    outline: none;
+    cursor: pointer;
+}
+
+#temperature::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ff8c00, #e94c00);
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    border: 2px solid #fff;
+    transition: transform 0.2s ease;
+}
+
+#temperature::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+/* Temperature Markers */
+.temp-markers {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+
+.temp-marker {
+    position: relative;
+    width: 3px;
+    height: 10px;
+    background-color: rgba(255,255,255,0.3);
+}
+
+.temp-marker-label {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.7);
+}
+
+/* Pancake Display */
+#pancake-display {
+    position: relative;
+    margin: 2rem auto;
+    text-align: center;
+    perspective: 1000px;
+}
+
+#pancake-container {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    margin: 0 auto;
+    /* Pan styling */
+    padding: 10px;
+    background: linear-gradient(to bottom right, #888, #555);
+    border-radius: 50%;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2), 
+                inset 0 2px 3px rgba(255,255,255,0.1),
+                inset 0 -10px 20px rgba(0,0,0,0.3);
+    animation: sizzle 4s infinite ease-in-out;
+    transform-style: preserve-3d;
+    border: 4px solid #333;
+    overflow: hidden;
+    
+    /* Pan handle */
+    &::after {
+        content: '';
+        position: absolute;
+        width: 90px;
+        height: 30px;
+        background: linear-gradient(to bottom, #555, #333);
+        bottom: 85px;
+        right: -80px;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        transform: rotate(-10deg);
+        z-index: -1;
+    }
+}
+
+@keyframes sizzle {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(1px) rotate(0.3deg); }
+    50% { transform: translateY(2px) rotate(-0.3deg); }
+    75% { transform: translateY(1px) rotate(0.2deg); }
+}
+
+#pancake {
+    width: 160px;
+    height: 160px; /* Perfect circle for top view */
+    border-radius: 50%;
+    margin: 0 auto;
+    margin-top: 40px; /* Position in the center of the pan */
+    background-color: var(--pancake-raw);
+    position: relative;
+    transition: all 0.8s ease, background-color 0.5s ease;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), inset 0 2px 3px rgba(255,255,255,0.2);
+    transform-style: preserve-3d;
+    z-index: 2;
+    overflow: hidden;
+}
+
+/* Texture on the pancake surface */
+#pancake::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: 
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15) 0%, transparent 25%),
+        radial-gradient(circle at 70% 60%, rgba(255,255,255,0.1) 0%, transparent 30%);
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
+}
+
+/* Create a subtle edge */
+#pancake::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 2px rgba(0,0,0,0.05);
+    z-index: 1;
+}
+
+#pancake.raw {
+    background-color: var(--pancake-raw);
+    background-image: 
+        radial-gradient(circle at 40% 40%, var(--pancake-raw) 0%, 
+                       rgba(255, 244, 214, 0.8) 70%,
+                       rgba(255, 244, 214, 0.9) 90%);
+}
+
+#pancake.cooking {
+    background-color: var(--pancake-cooking);
+    background-image: 
+        radial-gradient(circle at 40% 40%, var(--pancake-cooking) 0%, 
+                       rgba(255, 218, 138, 0.8) 75%,
+                       rgba(255, 218, 138, 0.9) 95%);
+}
+
+#pancake.medium {
+    background-color: var(--pancake-medium);
+    background-image: 
+        radial-gradient(circle at 40% 40%, var(--pancake-medium) 0%, 
+                       rgba(233, 166, 58, 0.85) 80%,
+                       rgba(233, 166, 58, 0.95) 95%);
+}
+
+#pancake.cooked {
+    background-color: var(--pancake-cooked);
+    background-image: 
+        radial-gradient(circle at 40% 40%, var(--pancake-cooked) 0%, 
+                      rgba(194, 107, 29, 0.85) 80%,
+                      rgba(194, 107, 29, 0.95) 95%);
+}
+
+#pancake.burnt {
+    background-color: var(--pancake-burnt);
+    background-image: 
+        radial-gradient(circle at 40% 40%, var(--pancake-burnt) 0%, 
+                      rgba(105, 64, 37, 0.85) 80%,
+                      rgba(105, 64, 37, 0.95) 95%);
+}
+
+/* Bubbles container */
+#bubbles-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+}
+
+/* Bubbles animation */
+.bubble {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    animation: rise 3s ease-out forwards;
+    opacity: 0;
+    box-shadow: 0 0 2px rgba(255,255,255,0.5);
+}
+
+@keyframes rise {
+    0% { transform: translateY(0) scale(1); opacity: 0; }
+    10% { opacity: 0.8; }
+    60% { opacity: 0.6; }
+    100% { transform: translateY(-40px) scale(0.5); opacity: 0; }
+}
+
+/* Steam effect */
+.steam {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    filter: blur(5px);
+    animation: steam 4s ease-out forwards;
+    opacity: 0;
+}
+
+@keyframes steam {
+    0% { transform: translateY(0) scale(1); opacity: 0; }
+    20% { opacity: 0.5; }
+    100% { transform: translateY(-60px) scale(2); opacity: 0; }
+}
+
+/* Sizzle spots */
+.sizzle-spot {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    animation: sizzle-spot 0.8s ease-out forwards;
+}
+
+@keyframes sizzle-spot {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0); opacity: 0; }
+}
+
+/* Flip animation */
+.flip-pancake {
+    animation: flip-pancake 1.2s cubic-bezier(0.455, 0.03, 0.515, 0.955) forwards;
+    transform-origin: center center;
+}
+
+@keyframes flip-pancake {
+    0% { 
+        transform: rotateY(0deg) scale(1); 
+        z-index: 10;
+    }
+    25% {
+        transform: rotateY(90deg) scale(0.9) translateY(-15px);
+        background-color: var(--pancake-cooked);
+        box-shadow: 0 15px 25px rgba(0,0,0,0.3);
+    }
+    50% { 
+        transform: rotateY(180deg) scale(0.8) translateY(-20px); 
+    }
+    75% {
+        transform: rotateY(270deg) scale(0.9) translateY(-15px);
+        background-color: var(--pancake-raw);
+    }
+    100% { 
+        transform: rotateY(360deg) scale(1); 
+        z-index: 2;
+    }
+}
+
+/* Special effects for flipping animation */
+.flip-effect {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 100;
+    background: radial-gradient(
+        circle at center,
+        rgba(255, 255, 255, 0.5) 0%,
+        transparent 70%
+    );
+    opacity: 0;
+    animation: flip-effect 1.2s ease-out;
+}
+
+@keyframes flip-effect {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 0.6; }
+}
+
+#timer {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-top: 1.5rem;
+    color: var(--secondary-color);
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    font-family: 'Courier New', monospace;
+    position: relative;
+    display: inline-block;
+}
+
+/* Progress Bar */
+#progress-container {
+    width: 100%;
+    height: 20px;
+    background-color: var(--progress-bg);
+    border-radius: 10px;
+    margin: 1rem auto;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+#progress-bar {
+    height: 100%;
+    background: linear-gradient(to right, var(--pancake-raw), var(--pancake-cooked));
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 10px;
+}
+
+#suggested-time-display {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    font-weight: bold;
+    color: var(--text-color);
+    text-shadow: 0 0 3px rgba(255,255,255,0.7);
+    font-size: 0.9rem;
+    z-index: 2;
+}
+
+/* Controls */
+#controls {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem 0;
+}
+
+.primary-btn {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(to bottom, var(--primary-color), darken(var(--primary-color), 10%));
+    color: var(--text-color);
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.primary-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.primary-btn:hover {
+    background: linear-gradient(to bottom, var(--secondary-color), darken(var(--secondary-color), 10%));
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+}
+
+.primary-btn:hover::after {
+    opacity: 1;
+}
+
+.primary-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.primary-btn:disabled {
+    background: linear-gradient(to bottom, #cccccc, #aaaaaa);
+    color: #777777;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+#action-btn {
+    position: relative;
+    background: linear-gradient(to bottom, #4caf50, #388e3c);
+    color: white;
+    font-size: 1.2rem;
+    padding: 1rem 2rem;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    display: block;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 30px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.3);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.3);
+}
+
+#action-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.3);
+}
+
+#action-btn.cooking {
+    background: linear-gradient(to bottom, #2196f3, #1976d2);
+}
+
+#action-btn.flipping {
+    background: linear-gradient(to bottom, #ff9800, #f57c00);
+}
+
+#action-btn.done {
+    background: linear-gradient(to bottom, #f44336, #d32f2f);
+}
+
+/* Rating Panel */
+#rating-panel {
+    text-align: center;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    transform: scale(0.95);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    position: relative;
+    z-index: 10;
+}
+
+#rating-panel.visible {
+    transform: scale(1);
+    opacity: 1;
+}
+
+#rating-panel h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--secondary-color);
+}
+
+.rating-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.rating-btn {
+    flex: 1;
+    margin: 0 0.8rem;
+    padding: 1rem 0.5rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.rating-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.8) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.rating-btn[data-rating="bad"] {
+    background: linear-gradient(to bottom, #FF6B6B, #e05151);
+    color: white;
+}
+
+.rating-btn[data-rating="mid"] {
+    background: linear-gradient(to bottom, #FFD166, #e6bd5c);
+}
+
+.rating-btn[data-rating="good"] {
+    background: linear-gradient(to bottom, #06D6A0, #05c091);
+    color: white;
+}
+
+.rating-btn:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 7px 14px rgba(0,0,0,0.15);
+}
+
+.rating-btn:hover::after {
+    opacity: 1;
+}
+
+.rating-btn:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Recommendation */
+#recommendation {
+    text-align: center;
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+#recommendation:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+#recommendation p {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+#suggested-time, #suggested-temp {
+    font-weight: bold;
+    color: var(--secondary-color);
+    font-size: 1.2rem;
+}
+
+/* History Panel */
+#history-panel {
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+#history-panel h2 {
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+    margin-bottom: 1.2rem;
+    position: relative;
+}
+
+#history-panel h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 3px;
+}
+
+#history-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 1.5rem;
+    padding-right: 10px;
+}
+
+#history-list::-webkit-scrollbar {
+    width: 6px;
+    background-color: #f5f5f5;
+}
+
+#history-list::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    border-radius: 3px;
+}
+
+.history-item {
+    padding: 1rem;
+    margin-bottom: 0.8rem;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.history-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.history-item .rating-indicator {
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 0.8rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.history-item .rating-bad {
+    background-color: #FF6B6B;
+}
+
+.history-item .rating-mid {
+    background-color: #FFD166;
+}
+
+.history-item .rating-good {
+    background-color: #06D6A0;
+}
+
+.history-date {
+    font-size: 0.85rem;
+    color: #777;
+}
+
+footer {
+    text-align: center;
+    margin-top: 3rem;
+    padding: 1.5rem;
+    font-size: 0.9rem;
+    color: #666;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.5), rgba(255,255,255,0.8));
+    border-radius: 15px 15px 0 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Animations */
+@keyframes flip {
+    0% { transform: rotateY(0deg); }
+    50% { transform: rotateY(180deg); }
+    100% { transform: rotateY(0deg); }
+}
+
+.flip-animation {
+    animation: flip 1s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.pulse-animation {
+    animation: pulse 0.5s ease-in-out;
+}
+
+/* Recipe Selector */
+#recipe-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+    position: relative;
+}
+
+#recipe-select {
+    font-size: 1rem;
+    padding: 0.5rem 2.5rem 0.5rem 1rem;
+    border-radius: 20px;
+    border: 2px solid var(--primary-color);
+    background-color: white;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFC857' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    background-size: 1em;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#recipe-select:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+#new-recipe-btn {
+    font-size: 1.2rem;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 0;
+}
+
+#new-recipe-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Recipe Info */
+#recipe-info {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+#recipe-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+#recipe-name {
+    font-size: 1.4rem;
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+#recipe-name::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+}
+
+#recipe-actions {
+    position: absolute;
+    right: 0;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.icon-btn.small {
+    font-size: 1rem;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    opacity: 0.6;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.icon-btn.small:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+#delete-recipe-btn:hover {
+    color: #f44336;
+}
+
+#edit-recipe-btn:hover {
+    color: #2196f3;
+}
+
+.recipe-description, 
+.recommendation-explanation {
+    font-size: 0.9rem;
+    color: #666;
+    font-style: italic;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Updated history items */
+.history-item {
+    position: relative;
+    padding: 1rem;
+    margin-bottom: 0.8rem;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.history-item-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.history-main {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.3rem;
+}
+
+.history-temp {
+    margin-right: 1rem;
+    font-weight: 600;
+}
+
+.history-times {
+    font-family: 'Courier New', monospace;
+}
+
+.history-delete-btn {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+}
+
+.history-delete-btn:hover {
+    color: #ff5252;
+    background-color: rgba(255, 82, 82, 0.1);
+    transform: scale(1.1);
+}
+
+.clear-history-btn {
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 1rem;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    color: #666;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.clear-history-btn:hover {
+    background-color: #ffe0e0;
+    color: #ff5252;
+    border-color: #ffb8b8;
+}
+
+.empty-history {
+    color: #999;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Confidence indicator */
+.recommendation-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.confidence-container {
+    width: 80px;
+    height: 10px;
+    background-color: #eee;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-left: 1rem;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.confidence {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.5s ease, background-color 0.5s ease;
+}
+
+.confidence.low {
+    background-color: #ff9800;
+    width: 30%;
+}
+
+.confidence.medium {
+    background-color: #2196f3;
+    width: 70%;
+}
+
+.confidence.high {
+    background-color: #4caf50;
+    width: 100%;
+}
+
+/* Toast notifications */
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.toast {
+    min-width: 200px;
+    margin-top: 10px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    background-color: #333;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-size: 14px;
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+}
+
+.toast.show {
+    transform: translateX(0);
+}
+
+.toast.info {
+    background-color: #2196f3;
+}
+
+.toast.success {
+    background-color: #4caf50;
+}
+
+.toast.error {
+    background-color: #f44336;
+}
+
+/* Modal for creating new recipes */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 15px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    animation: modal-appear 0.3s ease-out;
+    z-index: 1001;
+}
+
+@keyframes modal-appear {
+    from { 
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to { 
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.modal h2 {
+    margin-bottom: 1.5rem;
+    color: var(--secondary-color);
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.form-group input, 
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(255, 200, 87, 0.3);
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.cancel-btn {
+    padding: 0.8rem 1.5rem;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+    background-color: #eee;
+}
+
+.create-btn {
+    padding: 0.8rem 1.5rem;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.create-btn:hover {
+    background-color: darken(var(--secondary-color), 10%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 480px) {
+    #pancake-container {
+        width: 180px;
+        height: 180px;
+    }
+    
+    #pancake {
+        width: 160px;
+        height: 50px;
+    }
+    
+    #timer {
+        font-size: 2.5rem;
+    }
+    
+    #controls {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .primary-btn {
+        width: 100%;
+    }
+    
+    .rating-buttons {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    
+    .rating-btn {
+        margin: 0;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions button {
+        width: 100%;
+    }
+    
+    .toast {
+        width: calc(100% - 40px);
+    }
+}
